@@ -65,7 +65,11 @@
             do
             {
                 var response = await ssm.GetParametersByPathAsync(request);
-                
+
+                this.logger.LogInformation("EC2 ParameterStore has {ParametersCount} parameters in \'{ParametersPath}\'",
+                    response.Parameters.Count,
+                    path);
+
                 foreach (var resultParameter in response.Parameters)
                 {
                     if (resultParameter.Type == ParameterType.SecureString)
@@ -87,6 +91,10 @@
                 request.NextToken = response.NextToken;
 
             } while (!string.IsNullOrEmpty(request.NextToken));
+
+            this.logger.LogInformation(
+                "EC2 ParameterStore has returned {TotalParametersCount} parameters in total",
+                result.Count);
 
             return result;
         }
