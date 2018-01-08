@@ -4,7 +4,6 @@
     <TargetFramework>netstandard1.3</TargetFramework>
     <AssemblyName>Albelli.Extensions.Configuration.AmazonEC2ParameterStore</AssemblyName>
     <RootNamespace>Albelli.Extensions.Configuration.AmazonEC2ParameterStore</RootNamespace>
-    <Version>0.0.1</Version>    
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
@@ -13,7 +12,12 @@
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
+    <Version>0.0.1</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\SharedAssemblyInfo.cs" Link="SharedAssemblyInfo.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.3.15" />
