@@ -1,0 +1,7 @@
+build_script:
+  - cmd: build.cmd PushNuget
+test: off
+skip_branch_with_pr: true
+nuget:
+  account_feed: false
+  project_feed: false
