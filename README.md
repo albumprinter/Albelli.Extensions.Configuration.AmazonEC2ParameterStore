@@ -15,7 +15,6 @@ If you like to use `Configuration.GetSection(..).Bind()` or `Configuration.Bind(
 Example usage:
 
 ```
-
 namespace Albelli.AwesomeApi
 {
     public interface IMyAppSettings
@@ -28,6 +27,24 @@ namespace Albelli.AwesomeApi
         string ValueA { get; set;}
     }
 
+    public static class ConfigurationExtensions
+    {
+        public static T Get<T>(this IConfigurationRoot configuration)
+            where T : class, new()
+        {
+            var settings = new T();
+            configuration.Bind(settings);
+            return settings;
+        }
+
+        public static T Get<T>(this IConfigurationSection section)
+            where T : class, new()
+        {
+            var settings = new T();
+            section.Bind(settings);
+            return settings;
+        }
+    }
 
     public sealed class Startup
     {
@@ -59,12 +76,7 @@ namespace Albelli.AwesomeApi
         {
             services
                 .AddSingleton<IMyAppSettings>(
-                    context => {
-                        var settings = new MyAppSettings();
-                        var section = this.Configuration.GetSection($"{this.env}:{this.functionName}:settings");
-                        section.Bind(settings);
-                        return settings;
-                        })
+                    context => this.Configuration.GetSection($"{this.env}:{this.functionName}:settings").Bind<IMyAppSettings>())
                 .AddMvc()
         }
 
@@ -74,7 +86,6 @@ namespace Albelli.AwesomeApi
         }
     }
 }
-
 
 ```
 
