@@ -76,7 +76,7 @@ namespace Albelli.AwesomeApi
         {
             services
                 .AddSingleton<IMyAppSettings>(
-                    context => this.Configuration.GetSection($"{this.env}:{this.functionName}:settings").Bind<IMyAppSettings>())
+                    context => this.Configuration.GetSection($"{this.env}:{this.functionName}:settings").Get<IMyAppSettings>())
                 .AddMvc()
         }
 
