@@ -1,16 +1,12 @@
-﻿namespace Albelli.AmazonEC2ParameterStore
+﻿using System;
+using Amazon;
+using Amazon.SimpleSystemsManagement;
+using JetBrains.Annotations;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+
+namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
 {
-    using System;
-
-    using Amazon;
-    using Amazon.Runtime;
-    using Amazon.SimpleSystemsManagement;
-
-    using JetBrains.Annotations;
-
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Logging;
-
     internal sealed class AmazonEC2ParameterStoreSource : IConfigurationSource
     {
         public AmazonEC2ParameterStoreSource([NotNull] ILoggerFactory loggerFactory, [NotNull] string rootPath, [NotNull] string regionName)

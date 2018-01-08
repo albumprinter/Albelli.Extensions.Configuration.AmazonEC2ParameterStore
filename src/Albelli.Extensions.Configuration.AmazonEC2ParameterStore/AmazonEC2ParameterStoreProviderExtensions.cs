@@ -1,11 +1,11 @@
-﻿namespace Albelli.AmazonEC2ParameterStore
-{
-    using System;
-    using Amazon;
-    using JetBrains.Annotations;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Logging;
+﻿using System;
+using Amazon;
+using JetBrains.Annotations;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
+namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
+{
     public static class AmazonEC2ParameterStoreProviderExtensions
     {
         /// <summary>

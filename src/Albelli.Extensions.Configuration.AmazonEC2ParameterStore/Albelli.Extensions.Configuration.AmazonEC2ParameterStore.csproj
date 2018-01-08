@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <AssemblyName>Albelli.AmazonEC2ParameterStore</AssemblyName>
-    <RootNamespace>Albelli.AmazonEC2ParameterStore</RootNamespace>
+    <AssemblyName>Albelli.Extensions.Configuration.AmazonEC2ParameterStore</AssemblyName>
+    <RootNamespace>Albelli.Extensions.Configuration.AmazonEC2ParameterStore</RootNamespace>
     <Version>0.0.1</Version>    
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

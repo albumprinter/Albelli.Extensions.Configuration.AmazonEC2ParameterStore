@@ -1,19 +1,15 @@
-﻿namespace Albelli.AmazonEC2ParameterStore
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Amazon.SimpleSystemsManagement;
+using Amazon.SimpleSystemsManagement.Model;
+using JetBrains.Annotations;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+
+namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Logging;
-
-    using Amazon.SimpleSystemsManagement;
-    using Amazon.SimpleSystemsManagement.Model;
-
-    using JetBrains.Annotations;
-
-
-    public class AmazonEC2ParameterStoreProvider : ConfigurationProvider
+    public sealed class AmazonEC2ParameterStoreProvider : ConfigurationProvider
     {
         private readonly string rootPath;
         private readonly IAmazonSimpleSystemsManagement client;
