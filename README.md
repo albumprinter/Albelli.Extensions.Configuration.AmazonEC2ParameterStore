@@ -1,6 +1,6 @@
 # Albelli.Extensions.Configuration.AmazonEC2ParameterStore
 
-This .NET Core Configuration Provider is used to load settings from [Amazon EC2 ParameterStore](AmazonEC2ParameterStore) directory
+This .NET Core Configuration Provider is used to load settings from [Amazon EC2 ParameterStore](AmazonEC2ParameterStore) directory.
 
 Parameter names are being transformed by replacement `/` with `:` to be compatible with the format that the configuration library expects. 
 
@@ -10,7 +10,7 @@ For example:
 So
 `Configuration.GetSection("stage:api-lambda:s3")` and `Configuration.GetValue("stage:api-lambda:s3:bucketName")` should work as expected. 
 
-If you like to use `Configuration.GetSection(..).Bind()` or `Configuration.Bind()` - parameter names should not contain any extra characters, like `.-_`
+If you like to use `Configuration.GetSection(..).Bind()` or `Configuration.Bind()` - parameter names should not contain any extra characters, like `.-_`.
 
 Example usage:
 
