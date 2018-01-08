@@ -1,4 +1,4 @@
-# Albelli.Extensions.Configuration.AmazonEC2ParameterStore
+# AlbelliAmazonEC2ParameterStore
 
 This .NET Core Configuration Provider is used to load settings from [Amazon EC2 ParameterStore](AmazonEC2ParameterStore) directory.
 
