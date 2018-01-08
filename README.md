@@ -1,0 +1,1 @@
+# Albelli.Extensions.Configuration.AmazonEC2ParameterStore
