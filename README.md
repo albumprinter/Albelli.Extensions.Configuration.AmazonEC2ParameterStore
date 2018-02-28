@@ -1,5 +1,8 @@
 # AmazonEC2ParameterStore
 
+[![Build status](https://ci.appveyor.com/api/projects/status/f6cm4vwg9i4js7q0?svg=true)](https://ci.appveyor.com/project/albumprinter/albelli-extensions-configuration-amazonec2paramete)
+[![Nuget](https://img.shields.io/nuget/v/Albelli.Extensions.Configuration.AmazonEC2ParameterStore.svg)](https://www.nuget.org/packages/Albelli.Extensions.Configuration.AmazonEC2ParameterStore/)
+
 This .NET Core Configuration Provider is used to load settings from [Amazon EC2 ParameterStore](AmazonEC2ParameterStore) directory.
 
 Parameter names are being transformed by replacement `/` with `:` to be compatible with the format that the configuration library expects. 
