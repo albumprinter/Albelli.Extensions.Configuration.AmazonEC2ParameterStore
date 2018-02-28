@@ -13,6 +13,7 @@ So
 If you like to use `Configuration.GetSection(..).Bind()` or `Configuration.Bind()` - parameter names should not contain any extra characters, like `.-_`.
 
 Example usage:
+(please note that `Get<>` extension is already available in .net core 2.0 and should be used instead of the one given in the example below)
 
 ```
 namespace Albelli.AwesomeApi
@@ -76,7 +77,7 @@ namespace Albelli.AwesomeApi
         {
             services
                 .AddSingleton<IMyAppSettings>(
-                    context => this.Configuration.GetSection($"{this.env}:{this.functionName}:settings").Get<IMyAppSettings>())
+                    context => this.Configuration.GetSection($"{this.env}:{this.functionName}:settings").Get<MyAppSettings>())
                 .AddMvc()
         }
 
