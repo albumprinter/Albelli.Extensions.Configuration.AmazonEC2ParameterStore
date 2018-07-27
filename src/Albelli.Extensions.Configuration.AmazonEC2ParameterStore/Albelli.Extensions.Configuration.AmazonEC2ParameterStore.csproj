@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.3,netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard1.3,netstandard2.0</TargetFrameworks>
     <AssemblyName>Albelli.Extensions.Configuration.AmazonEC2ParameterStore</AssemblyName>
     <RootNamespace>Albelli.Extensions.Configuration.AmazonEC2ParameterStore</RootNamespace>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
