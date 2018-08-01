@@ -77,7 +77,7 @@ Target "Package" <| fun _ ->
                               Project = proj
                               OutputPath = "artifacts" |> Path.GetFullPath
                               Configuration = "Release"
-                              AdditionalArgs = ["--no-build"]
+                              AdditionalArgs = ["--no-build";"--include-symbols";"--include-source"]
                               })
 
     !! "src/**/*.csproj"
