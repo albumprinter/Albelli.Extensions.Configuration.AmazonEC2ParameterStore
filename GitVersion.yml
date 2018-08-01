@@ -8,7 +8,7 @@ branches:
     tag: a-{BranchName}
     increment: Minor
   (pull|pull\-requests|pr)[/-]:
-    tag: a-pr-{BranchName}
+    tag: a-{BranchName}
     increment: Inherit
   hotfix(es)?[/-]:
     tag: rc
