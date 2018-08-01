@@ -85,7 +85,7 @@ Target "Package" <| fun _ ->
 
 Target "PushNuget" <| fun _ ->
     let pushNugetPackageWithKey key package =
-        sprintf "nuget push -k %s %s" key package
+        sprintf "nuget push -k %s -s %s" key package
         |> DotNetCli.RunCommand id
     
     let pushPackage =
