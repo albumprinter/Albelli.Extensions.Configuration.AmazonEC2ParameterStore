@@ -94,6 +94,7 @@ Target "PushNuget" <| fun _ ->
     
     ProcessHelper.enableProcessTracing <- false                  
     !! "artifacts/*.nupkg"
+    |> Seq.filter (fun pkg -> not(pkg.EndsWith(".symbols.nupkg")))
     |> Seq.iter pushPackage
     ProcessHelper.enableProcessTracing <- true
 
