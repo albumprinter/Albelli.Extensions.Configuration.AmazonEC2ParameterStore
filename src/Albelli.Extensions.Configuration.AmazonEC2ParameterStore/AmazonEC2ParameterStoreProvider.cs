@@ -12,18 +12,24 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
     public sealed class AmazonEC2ParameterStoreProvider : ConfigurationProvider
     {
         private readonly string rootPath;
+        private readonly bool parseStringListAsList;
         private readonly IAmazonSimpleSystemsManagement client;
         private readonly ILogger<AmazonEC2ParameterStoreProvider> logger;
 
         /// <summary>
         /// Creates a new instance of <see cref="AmazonEC2ParameterStoreProvider"/>.
         /// </summary>
-        public AmazonEC2ParameterStoreProvider([NotNull] ILoggerFactory loggerFactory, [NotNull] IAmazonSimpleSystemsManagement client, [NotNull] string rootPath)
+        public AmazonEC2ParameterStoreProvider(
+            [NotNull] ILoggerFactory loggerFactory,
+            [NotNull] IAmazonSimpleSystemsManagement client,
+            [NotNull] string rootPath,
+            bool parseStringListAsList = false)
         {
             this.rootPath = rootPath ?? throw new ArgumentNullException(nameof(rootPath));
             this.client = client ?? throw new ArgumentNullException(nameof(client));
-
             this.logger = loggerFactory?.CreateLogger<AmazonEC2ParameterStoreProvider>() ?? throw new ArgumentNullException(nameof(loggerFactory));
+
+            this.parseStringListAsList = parseStringListAsList;
         }
 
         public override void Load()
@@ -68,18 +74,30 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
 
                 foreach (var resultParameter in response.Parameters)
                 {
+                    var convertedKey = resultParameter.Name
+                        .Trim('/')
+                        .Replace("/", ":");
+
                     if (resultParameter.Type == ParameterType.SecureString)
                     {
                         this.logger.LogInformation("EC2 ParameterStore has returned {ParameterName}", resultParameter.Name);
+                    }
+                    else if (resultParameter.Type == ParameterType.StringList
+                             && parseStringListAsList)
+                    {
+                        var listStrings = resultParameter.Value;
+
+                        for (var index = 0; index < listStrings.Split(',').Length; index++)
+                        {
+                            var substring = listStrings.Split(',')[index];
+                            var newKey = $"{convertedKey}:{index}";
+                            result.Add(newKey, substring);
+                        }
                     }
                     else
                     {
                         this.logger.LogInformation("EC2 ParameterStore has returned {ParameterName}  with value \'{ParameterValue}\'", resultParameter.Name, resultParameter.Value);
                     }
-
-                    var convertedKey = resultParameter.Name
-                        .Trim('/')
-                        .Replace("/", ":");
 
                     result.Add(convertedKey, resultParameter.Value);
                 }
