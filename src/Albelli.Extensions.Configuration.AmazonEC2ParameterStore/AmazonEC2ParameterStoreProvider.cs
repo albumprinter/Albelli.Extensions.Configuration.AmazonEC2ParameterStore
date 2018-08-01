@@ -12,18 +12,24 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
     public sealed class AmazonEC2ParameterStoreProvider : ConfigurationProvider
     {
         private readonly string rootPath;
+        private readonly bool parseStringListAsList;
         private readonly IAmazonSimpleSystemsManagement client;
         private readonly ILogger<AmazonEC2ParameterStoreProvider> logger;
 
         /// <summary>
         /// Creates a new instance of <see cref="AmazonEC2ParameterStoreProvider"/>.
         /// </summary>
-        public AmazonEC2ParameterStoreProvider([NotNull] ILoggerFactory loggerFactory, [NotNull] IAmazonSimpleSystemsManagement client, [NotNull] string rootPath)
+        public AmazonEC2ParameterStoreProvider(
+            [NotNull] ILoggerFactory loggerFactory,
+            [NotNull] IAmazonSimpleSystemsManagement client,
+            [NotNull] string rootPath,
+            bool parseStringListAsList = false)
         {
             this.rootPath = rootPath ?? throw new ArgumentNullException(nameof(rootPath));
             this.client = client ?? throw new ArgumentNullException(nameof(client));
-
             this.logger = loggerFactory?.CreateLogger<AmazonEC2ParameterStoreProvider>() ?? throw new ArgumentNullException(nameof(loggerFactory));
+
+            this.parseStringListAsList = parseStringListAsList;
         }
 
         public override void Load()
@@ -68,20 +74,12 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
 
                 foreach (var resultParameter in response.Parameters)
                 {
-                    if (resultParameter.Type == ParameterType.SecureString)
-                    {
-                        this.logger.LogInformation("EC2 ParameterStore has returned {ParameterName}", resultParameter.Name);
-                    }
-                    else
-                    {
-                        this.logger.LogInformation("EC2 ParameterStore has returned {ParameterName}  with value \'{ParameterValue}\'", resultParameter.Name, resultParameter.Value);
-                    }
+                    LogParameter(resultParameter);
 
-                    var convertedKey = resultParameter.Name
-                        .Trim('/')
-                        .Replace("/", ":");
-
-                    result.Add(convertedKey, resultParameter.Value);
+                    foreach (var kvp in BuildParameters(resultParameter, parseStringListAsList))
+                    {
+                        result.Add(kvp.Key, kvp.Value);
+                    }
                 }
 
                 request.NextToken = response.NextToken;
@@ -93,6 +91,46 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
                 result.Count);
 
             return result;
+        }
+
+        private void LogParameter(Parameter parameter)
+        {
+            if (parameter.Type == ParameterType.SecureString)
+            {
+                this.logger.LogInformation("EC2 ParameterStore has returned {ParameterName}", parameter.Name);
+            }
+            else
+            {
+                this.logger.LogInformation("EC2 ParameterStore has returned {ParameterName}  with value \'{ParameterValue}\'", parameter.Name, parameter.Value);
+            }
+        }
+
+        private static IDictionary<string, string> BuildParameters(Parameter parameter, bool parseStringListAsList)
+        {
+            var results = new Dictionary<string, string>();
+
+            var convertedKey = parameter.Name
+                .Trim('/')
+                .Replace("/", ":");
+
+            if (parameter.Type == ParameterType.StringList && parseStringListAsList)
+            {
+                var stringListAsArray = parameter.Value.Split(',');
+
+                for (var index = 0; index < stringListAsArray.Length; index++)
+                {
+                    var substring = stringListAsArray[index];
+                    var newKey = $"{convertedKey}:{index}";
+                    results.Add(newKey, substring);
+                }
+            }
+            else
+            {
+                results.Add(convertedKey, parameter.Value);
+            }
+
+
+            return results;
         }
     }
 }

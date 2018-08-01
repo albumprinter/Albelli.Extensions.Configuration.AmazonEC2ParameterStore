@@ -77,7 +77,7 @@ Target "Package" <| fun _ ->
                               Project = proj
                               OutputPath = "artifacts" |> Path.GetFullPath
                               Configuration = "Release"
-                              AdditionalArgs = ["--no-build"]
+                              AdditionalArgs = ["--no-build";"--include-symbols";"--include-source"]
                               })
 
     !! "src/**/*.csproj"
@@ -94,6 +94,7 @@ Target "PushNuget" <| fun _ ->
     
     ProcessHelper.enableProcessTracing <- false                  
     !! "artifacts/*.nupkg"
+    |> Seq.filter (fun pkg -> not(pkg.EndsWith(".symbols.nupkg")))
     |> Seq.iter pushPackage
     ProcessHelper.enableProcessTracing <- true
 
