@@ -85,11 +85,10 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
                     else if (resultParameter.Type == ParameterType.StringList
                              && parseStringListAsList)
                     {
-                        var listStrings = resultParameter.Value;
-
-                        for (var index = 0; index < listStrings.Split(',').Length; index++)
+                        var stringListAsArray = resultParameter.Value.Split(',');
+                        for (var index = 0; index < stringListAsArray.Length; index++)
                         {
-                            var substring = listStrings.Split(',')[index];
+                            var substring = stringListAsArray[index];
                             var newKey = $"{convertedKey}:{index}";
                             result.Add(newKey, substring);
                         }
