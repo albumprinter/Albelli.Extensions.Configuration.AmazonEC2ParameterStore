@@ -74,31 +74,12 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
 
                 foreach (var resultParameter in response.Parameters)
                 {
-                    var convertedKey = resultParameter.Name
-                        .Trim('/')
-                        .Replace("/", ":");
+                    LogParameter(resultParameter);
 
-                    if (resultParameter.Type == ParameterType.SecureString)
+                    foreach (var kvp in BuildParameters(resultParameter, parseStringListAsList))
                     {
-                        this.logger.LogInformation("EC2 ParameterStore has returned {ParameterName}", resultParameter.Name);
+                        result.Add(kvp.Key, kvp.Value);
                     }
-                    else if (resultParameter.Type == ParameterType.StringList
-                             && parseStringListAsList)
-                    {
-                        var stringListAsArray = resultParameter.Value.Split(',');
-                        for (var index = 0; index < stringListAsArray.Length; index++)
-                        {
-                            var substring = stringListAsArray[index];
-                            var newKey = $"{convertedKey}:{index}";
-                            result.Add(newKey, substring);
-                        }
-                    }
-                    else
-                    {
-                        this.logger.LogInformation("EC2 ParameterStore has returned {ParameterName}  with value \'{ParameterValue}\'", resultParameter.Name, resultParameter.Value);
-                    }
-
-                    result.Add(convertedKey, resultParameter.Value);
                 }
 
                 request.NextToken = response.NextToken;
@@ -110,6 +91,46 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
                 result.Count);
 
             return result;
+        }
+
+        private void LogParameter(Parameter parameter)
+        {
+            if (parameter.Type == ParameterType.SecureString)
+            {
+                this.logger.LogInformation("EC2 ParameterStore has returned {ParameterName}", parameter.Name);
+            }
+            else
+            {
+                this.logger.LogInformation("EC2 ParameterStore has returned {ParameterName}  with value \'{ParameterValue}\'", parameter.Name, parameter.Value);
+            }
+        }
+
+        private static IDictionary<string, string> BuildParameters(Parameter parameter, bool parseStringListAsList)
+        {
+            var results = new Dictionary<string, string>();
+
+            var convertedKey = parameter.Name
+                .Trim('/')
+                .Replace("/", ":");
+
+            if (parameter.Type == ParameterType.StringList && parseStringListAsList)
+            {
+                var stringListAsArray = parameter.Value.Split(',');
+
+                for (var index = 0; index < stringListAsArray.Length; index++)
+                {
+                    var substring = stringListAsArray[index];
+                    var newKey = $"{convertedKey}:{index}";
+                    results.Add(newKey, substring);
+                }
+            }
+            else
+            {
+                results.Add(convertedKey, parameter.Value);
+            }
+
+
+            return results;
         }
     }
 }
