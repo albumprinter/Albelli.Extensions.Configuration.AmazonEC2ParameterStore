@@ -11,7 +11,6 @@ open Fake.AssemblyInfoFile
     module ScriptVars =
         let nugetKey() = "NUGET_API_KEY" |> environVarOrFail
 
-        let nugetSource() = "https://www.nuget.org/api/v2/package"
         let version() = GitVersion (fun p -> { p with ToolPath = findToolInSubPath "GitVersion.exe" currentDirectory})
 
 Target "Trace" <| fun _ ->
@@ -85,12 +84,12 @@ Target "Package" <| fun _ ->
     |> Seq.iter packageProject
 
 Target "PushNuget" <| fun _ ->
-    let pushNugetPackageWithKey key source package =
-        sprintf "nuget push -k %s -s %s %s" key source package
+    let pushNugetPackageWithKey key package =
+        sprintf "nuget push -k %s -s %s %s" key package
         |> DotNetCli.RunCommand id
     
     let pushPackage =
-        pushNugetPackageWithKey (ScriptVars.nugetKey()) (ScriptVars.nugetSource())
+        pushNugetPackageWithKey (ScriptVars.nugetKey())
     
     ProcessHelper.enableProcessTracing <- false                  
     !! "artifacts/*.nupkg"
