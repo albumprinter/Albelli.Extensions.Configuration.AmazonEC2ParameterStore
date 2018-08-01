@@ -1,5 +1,6 @@
 ﻿using System;
 using Amazon;
+using Amazon.Runtime;
 using Amazon.SimpleSystemsManagement;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
@@ -18,11 +19,20 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
             : this(loggerFactory, rootPath, region, false) { }
 
         public AmazonEC2ParameterStoreSource([NotNull] ILoggerFactory loggerFactory, [NotNull] string rootPath, [NotNull] RegionEndpoint region, bool parseStringListAsList)
+        : this(new AmazonSimpleSystemsManagementClient(region), loggerFactory, rootPath, parseStringListAsList) { }
+
+        public AmazonEC2ParameterStoreSource([NotNull] AWSCredentials credentials, [NotNull] ILoggerFactory loggerFactory, [NotNull] string rootPath, [NotNull] RegionEndpoint region, bool parseStringListAsList)
+        : this(new AmazonSimpleSystemsManagementClient(credentials, region), loggerFactory, rootPath, parseStringListAsList) { }
+
+        private AmazonEC2ParameterStoreSource(
+            [NotNull] IAmazonSimpleSystemsManagement amazonSimpleSystemsManagement,
+            [NotNull] ILoggerFactory loggerFactory,
+            [NotNull] string rootPath,
+            bool parseStringListAsList)
         {
             this.LoggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
             this.RootPath = rootPath ?? throw new ArgumentNullException(nameof(loggerFactory));
-
-            this.AmazonSimpleSystemsManagement = new AmazonSimpleSystemsManagementClient(region);
+            this.AmazonSimpleSystemsManagement = amazonSimpleSystemsManagement ?? throw new ArgumentNullException(nameof(amazonSimpleSystemsManagement));
 
             this.parseStringListAsList = parseStringListAsList;
         }

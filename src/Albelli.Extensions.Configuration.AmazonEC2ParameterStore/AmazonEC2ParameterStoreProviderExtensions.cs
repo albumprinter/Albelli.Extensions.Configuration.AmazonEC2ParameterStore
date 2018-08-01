@@ -1,5 +1,6 @@
 ﻿using System;
 using Amazon;
+using Amazon.Runtime;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -16,6 +17,7 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
         /// <param name="loggerFactory">Logger factory to be passed to the provider.</param>
         /// <param name="rootPath">Parameters directory to load from.</param>
         /// <param name="region">Parameters AWS region.</param>
+        /// <param name="credentials">AWS Credentials. If null, then the default fall back is used.</param>
         /// <param name="parseStringListAsList">If set to true, parses the comma deilimited value into multiple values so it can be mapped to lists</param>
         /// <returns>The <see cref="AmazonEC2ParameterStoreSource"/>.</returns>
         public static IConfigurationBuilder AddEC2ParameterStoreVariables(
@@ -23,12 +25,14 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
             [NotNull] ILoggerFactory loggerFactory,
             [NotNull] string rootPath,
             [NotNull] string region,
+            [CanBeNull] AWSCredentials credentials = null,
             bool parseStringListAsList = false)
         {
             return configurationBuilder.AddEC2ParameterStoreVariables(
                 loggerFactory,
                 rootPath,
                 RegionEndpoint.GetBySystemName(region),
+                credentials,
                 parseStringListAsList);
         }
 
@@ -40,6 +44,7 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
         /// <param name="loggerFactory">Logger factory to be passed to the provider.</param>
         /// <param name="rootPath">Parameters directory to load from.</param>
         /// <param name="region">Parameters AWS region.</param>
+        /// <param name="credentials">AWS Credentials. If null, then the default fall back is used.</param>
         /// <param name="parseStringListAsList">If set to true, parses the comma deilimited value into multiple values so it can be mapped to lists</param>
         /// <returns>The <see cref="AmazonEC2ParameterStoreSource"/>.</returns>
         public static IConfigurationBuilder AddEC2ParameterStoreVariables(
@@ -47,6 +52,7 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
             [NotNull] ILoggerFactory loggerFactory,
             [NotNull] string rootPath,
             [NotNull] RegionEndpoint region,
+            [CanBeNull] AWSCredentials credentials = null,
             bool parseStringListAsList = false)
         {
             if (loggerFactory == null)
@@ -54,7 +60,10 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
                 throw new ArgumentNullException(nameof(loggerFactory));
             }
 
-            return configurationBuilder.Add(new AmazonEC2ParameterStoreSource(loggerFactory, rootPath, region, parseStringListAsList));
+            return
+                credentials == null
+                    ? configurationBuilder.Add(new AmazonEC2ParameterStoreSource(loggerFactory, rootPath, region, parseStringListAsList))
+                    : configurationBuilder.Add(new AmazonEC2ParameterStoreSource(credentials, loggerFactory, rootPath, region, parseStringListAsList));
         }
 
     }
