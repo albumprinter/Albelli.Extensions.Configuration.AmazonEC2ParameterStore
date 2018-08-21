@@ -12,29 +12,38 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
     {
         private readonly bool parseStringListAsList;
 
-        public AmazonEC2ParameterStoreSource([NotNull] ILoggerFactory loggerFactory, [NotNull] string rootPath, [NotNull] string regionName)
-            : this(loggerFactory, rootPath, RegionEndpoint.GetBySystemName(regionName)) { }
+        private readonly bool failIfCantLoad;
 
-        public AmazonEC2ParameterStoreSource([NotNull] ILoggerFactory loggerFactory, [NotNull] string rootPath, [NotNull] RegionEndpoint region)
-            : this(loggerFactory, rootPath, region, false) { }
+        public AmazonEC2ParameterStoreSource(
+            [NotNull] string rootPath,
+            [NotNull] RegionEndpoint region,
+            bool parseStringListAsList,
+            bool failIfCantLoad,
+            [CanBeNull] ILoggerFactory loggerFactory)
+            : this(new AmazonSimpleSystemsManagementClient(region), rootPath, parseStringListAsList, failIfCantLoad, loggerFactory) { }
 
-        public AmazonEC2ParameterStoreSource([NotNull] ILoggerFactory loggerFactory, [NotNull] string rootPath, [NotNull] RegionEndpoint region, bool parseStringListAsList)
-        : this(new AmazonSimpleSystemsManagementClient(region), loggerFactory, rootPath, parseStringListAsList) { }
-
-        public AmazonEC2ParameterStoreSource([NotNull] AWSCredentials credentials, [NotNull] ILoggerFactory loggerFactory, [NotNull] string rootPath, [NotNull] RegionEndpoint region, bool parseStringListAsList)
-        : this(new AmazonSimpleSystemsManagementClient(credentials, region), loggerFactory, rootPath, parseStringListAsList) { }
+        public AmazonEC2ParameterStoreSource(
+            [NotNull] AWSCredentials credentials,
+            [NotNull] string rootPath,
+            [NotNull] RegionEndpoint region,
+            bool parseStringListAsList,
+            bool failIfCantLoad,
+            [CanBeNull] ILoggerFactory loggerFactory)
+        : this(new AmazonSimpleSystemsManagementClient(credentials, region), rootPath, parseStringListAsList, failIfCantLoad, loggerFactory) { }
 
         private AmazonEC2ParameterStoreSource(
             [NotNull] IAmazonSimpleSystemsManagement amazonSimpleSystemsManagement,
-            [NotNull] ILoggerFactory loggerFactory,
             [NotNull] string rootPath,
-            bool parseStringListAsList)
+            bool parseStringListAsList,
+            bool failIfCantLoad,
+            [CanBeNull] ILoggerFactory loggerFactory)
         {
-            this.LoggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
             this.RootPath = rootPath ?? throw new ArgumentNullException(nameof(loggerFactory));
             this.AmazonSimpleSystemsManagement = amazonSimpleSystemsManagement ?? throw new ArgumentNullException(nameof(amazonSimpleSystemsManagement));
 
+            this.LoggerFactory = loggerFactory;
             this.parseStringListAsList = parseStringListAsList;
+            this.failIfCantLoad = failIfCantLoad;
         }
 
         /// <summary>
@@ -59,7 +68,7 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
         /// <returns>A <see cref="AmazonEC2ParameterStoreProvider"/>The EC2 ParameterStore provider.</returns>
         public IConfigurationProvider Build(IConfigurationBuilder builder)
         {
-            return new AmazonEC2ParameterStoreProvider(this.LoggerFactory, this.AmazonSimpleSystemsManagement, this.RootPath, this.parseStringListAsList);
+            return new AmazonEC2ParameterStoreProvider(this.AmazonSimpleSystemsManagement, this.RootPath, this.parseStringListAsList, this.failIfCantLoad, this.LoggerFactory);
         }
     }
 }
