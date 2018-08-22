@@ -13,6 +13,7 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
     {
         private readonly string rootPath;
         private readonly bool parseStringListAsList;
+        private readonly bool failIfCantLoad;
         private readonly IAmazonSimpleSystemsManagement client;
         private readonly ILogger<AmazonEC2ParameterStoreProvider> logger;
 
@@ -20,17 +21,37 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
         /// Creates a new instance of <see cref="AmazonEC2ParameterStoreProvider"/>.
         /// </summary>
         public AmazonEC2ParameterStoreProvider(
-            [NotNull] ILoggerFactory loggerFactory,
             [NotNull] IAmazonSimpleSystemsManagement client,
             [NotNull] string rootPath,
-            bool parseStringListAsList = false)
+            bool parseStringListAsList = false,
+            bool failIfCantLoad = false,
+            [CanBeNull] ILoggerFactory loggerFactory = null)
         {
             this.rootPath = rootPath ?? throw new ArgumentNullException(nameof(rootPath));
             this.client = client ?? throw new ArgumentNullException(nameof(client));
-            this.logger = loggerFactory?.CreateLogger<AmazonEC2ParameterStoreProvider>() ?? throw new ArgumentNullException(nameof(loggerFactory));
+
+            if (loggerFactory == null)
+            {
+                loggerFactory = new LoggerFactory();
+            }
+
+            this.logger = loggerFactory.CreateLogger<AmazonEC2ParameterStoreProvider>();
 
             this.parseStringListAsList = parseStringListAsList;
+            this.failIfCantLoad = failIfCantLoad;
         }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="AmazonEC2ParameterStoreProvider"/>.
+        /// </summary>
+        [Obsolete("Please use the overload where ILoggerFactory is optional")]
+        [PublicAPI]
+        public AmazonEC2ParameterStoreProvider(
+            [CanBeNull] ILoggerFactory loggerFactory,
+            [NotNull] IAmazonSimpleSystemsManagement client,
+            [NotNull] string rootPath,
+            bool parseStringListAsList = false)
+        : this(client, rootPath, parseStringListAsList, false, loggerFactory) { }
 
         public override void Load()
         {
@@ -41,6 +62,11 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
             catch (Exception e)
             {
                 this.logger.LogError(0, e, "Failed to access Amazon EC2 ParameterStore");
+
+                if (failIfCantLoad)
+                {
+                    throw;
+                }
             }
         }
 
