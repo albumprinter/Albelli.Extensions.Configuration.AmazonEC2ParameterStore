@@ -12,12 +12,14 @@
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <Version>0.0.1</Version>
+    <PackageProjectUrl>https://github.com/albumprinter/Albelli.Extensions.Configuration.AmazonEC2ParameterStore</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/albumprinter/Albelli.Extensions.Configuration.AmazonEC2ParameterStore/blob/master/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
     <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs" Link="SharedAssemblyInfo.cs" />
   </ItemGroup>
