@@ -36,7 +36,8 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
                 RegionEndpoint.GetBySystemName(region),
                 loggerFactory,
                 credentials,
-                parseStringListAsList);
+                parseStringListAsList,
+                failIfCantLoad);
         }
 
         /// <summary>
