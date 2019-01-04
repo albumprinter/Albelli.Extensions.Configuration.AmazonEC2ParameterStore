@@ -38,7 +38,7 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
             bool failIfCantLoad,
             [CanBeNull] ILoggerFactory loggerFactory)
         {
-            this.RootPath = rootPath ?? throw new ArgumentNullException(nameof(loggerFactory));
+            this.RootPath = rootPath ?? throw new ArgumentNullException(nameof(rootPath));
             this.AmazonSimpleSystemsManagement = amazonSimpleSystemsManagement ?? throw new ArgumentNullException(nameof(amazonSimpleSystemsManagement));
 
             this.LoggerFactory = loggerFactory;
