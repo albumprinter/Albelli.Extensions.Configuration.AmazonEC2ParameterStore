@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.3;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>Albelli.Extensions.Configuration.AmazonEC2ParameterStore</AssemblyName>
     <RootNamespace>Albelli.Extensions.Configuration.AmazonEC2ParameterStore</RootNamespace>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
@@ -16,16 +16,12 @@
     <PackageLicenseUrl>https://github.com/albumprinter/Albelli.Extensions.Configuration.AmazonEC2ParameterStore/blob/master/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
-    <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
-  </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs" Link="SharedAssemblyInfo.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.5.1.24" />
+    <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.5.9" />
     <PackageReference Include="JetBrains.Annotations" Version="11.0.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
