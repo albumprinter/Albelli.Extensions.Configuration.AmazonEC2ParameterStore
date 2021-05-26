@@ -72,7 +72,7 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
 
         private async Task LoadAsync()
         {
-            foreach (var pair in await this.GetParametersAsync(this.client, this.rootPath))
+            foreach (var pair in await this.GetParametersAsync(this.client, this.rootPath).ConfigureAwait(false))
             {
                 this.Data.Add(pair.Key, pair.Value);
             }
@@ -92,7 +92,7 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
 
             do
             {
-                var response = await ssm.GetParametersByPathAsync(request);
+                var response = await ssm.GetParametersByPathAsync(request).ConfigureAwait(false);
 
                 this.logger.LogInformation("EC2 ParameterStore has {ParametersCount} parameters in \'{ParametersPath}\'",
                     response.Parameters.Count,

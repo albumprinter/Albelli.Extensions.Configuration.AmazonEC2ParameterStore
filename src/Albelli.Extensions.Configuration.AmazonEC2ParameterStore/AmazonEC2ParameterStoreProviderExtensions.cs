@@ -10,7 +10,7 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
     public static class AmazonEC2ParameterStoreProviderExtensions
     {
         /// <summary>
-        /// Adds an <see cref="IConfigurationProvider"/> 
+        /// Adds an <see cref="IConfigurationProvider"/>
         /// that reads configuration values from AWS EC2 ParameterStore and decrypt them using AWS KMS.
         /// </summary>
         /// <param name="configurationBuilder">The <see cref="IConfigurationBuilder"/> to add to.</param>
@@ -41,7 +41,7 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
         }
 
         /// <summary>
-        /// Adds an <see cref="IConfigurationProvider"/> 
+        /// Adds an <see cref="IConfigurationProvider"/>
         /// that reads configuration values from AWS EC2 ParameterStore and decrypt them using AWS KMS.
         /// </summary>
         /// <param name="configurationBuilder">The <see cref="IConfigurationBuilder"/> to add to.</param>
@@ -69,7 +69,7 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
         }
 
         /// <summary>
-        /// Adds an <see cref="IConfigurationProvider"/> 
+        /// Adds an <see cref="IConfigurationProvider"/>
         /// that reads configuration values from AWS EC2 ParameterStore and decrypt them using AWS KMS.
         /// </summary>
         /// <param name="configurationBuilder">The <see cref="IConfigurationBuilder"/> to add to.</param>
@@ -98,7 +98,7 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
         }
 
         /// <summary>
-        /// Adds an <see cref="IConfigurationProvider"/> 
+        /// Adds an <see cref="IConfigurationProvider"/>
         /// that reads configuration values from AWS EC2 ParameterStore and decrypt them using AWS KMS.
         /// </summary>
         /// <param name="configurationBuilder">The <see cref="IConfigurationBuilder"/> to add to.</param>
@@ -119,10 +119,10 @@ namespace Albelli.Extensions.Configuration.AmazonEC2ParameterStore
             bool parseStringListAsList = false)
         {
             return configurationBuilder.AddEC2ParameterStoreVariables(
-                rootPath, 
-                region, 
-                loggerFactory, 
-                credentials, 
+                rootPath,
+                region,
+                loggerFactory,
+                credentials,
                 parseStringListAsList);
         }
     }
